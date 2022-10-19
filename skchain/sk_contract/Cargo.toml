@@ -1,0 +1,12 @@
+[package]
+name = "sk_contract"
+version = "0.0.0"
+description = "sk chain core"
+authors = ["cc"]
+license = ""
+repository = ""
+edition = "2021"
+rust-version = "1.57"
+
+[dependencies]
+

@@ -1,0 +1,25 @@
+[workspace]
+members = [
+  "skchain/sk_core",
+  "skchain/sk_common",
+  "skchain/sk_genesis",
+  "skchain/sk_contract",
+  "ipfs_ds_rocksdb",
+  "src-tauri",
+  "ipfs-embed"
+]
+
+[profile.release]
+# lto = true
+
+[profile.bench]
+debug = true
+# lto = true
+
+# Without this, printing diff consumes more than a minute.
+
+[profile.dev.package.pretty_assertions]
+opt-level = 3
+
+[profile.test.package.pretty_assertions]
+opt-level = 3

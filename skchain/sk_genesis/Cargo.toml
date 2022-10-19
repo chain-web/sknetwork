@@ -1,0 +1,13 @@
+[package]
+name = "sk_genesis"
+version = "0.0.1"
+description = "sk chain core"
+authors = ["cc"]
+license = ""
+repository = ""
+edition = "2021"
+rust-version = "1.57"
+
+[dependencies]
+sk_common = { version = "0.0.1", path = "../sk_common" }
+
