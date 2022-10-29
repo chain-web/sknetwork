@@ -1586,18 +1586,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0206175f82b8d6bf6652ff7d71a1e27fd2e4efde587fd368662814d6ec1d9ce0"
 
 [[package]]
-name = "fallible-iterator"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4443176a9f2c162692bd3d352d745ef9413eec5782a80d8fd6f8a1ac692a07f7"
-
-[[package]]
-name = "fallible-streaming-iterator"
-version = "0.1.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7360491ce676a36bf9bb3c56c1aa791658183a54d2744120f27285738d90465a"
-
-[[package]]
 name = "fastrand"
 version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2158,9 +2146,6 @@ name = "hashbrown"
 version = "0.11.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ab5ef0d4909ef3724cc8cce6ccc8572c5c817592e9285f5464f8e86f8bd3726e"
-dependencies = [
- "ahash",
-]
 
 [[package]]
 name = "hashbrown"
@@ -2169,15 +2154,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a9ee70c43aaf417c914396645a0fa852624801b24ebb7ae78fe8272889ac888"
 dependencies = [
  "ahash",
-]
-
-[[package]]
-name = "hashlink"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7249a3129cbc1ffccd74857f81464a323a152173cdb134e0fd81bc803b29facf"
-dependencies = [
- "hashbrown 0.11.2",
 ]
 
 [[package]]
@@ -2517,7 +2493,6 @@ dependencies = [
  "fnv",
  "futures",
  "futures-timer",
- "ipfs-sqlite-block-store",
  "ipfs_ds_rocksdb",
  "lazy_static",
  "libipld 0.12.0",
@@ -2542,30 +2517,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "ipfs-sqlite-block-store"
-version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "025ff3ea1adb63aed8cb6cebd3a7fcf992847c6ce7604b2c07823d6bbc1f1a77"
-dependencies = [
- "anyhow",
- "derive_more",
- "fnv",
- "futures",
- "itertools 0.10.5",
- "libipld 0.12.0",
- "parking_lot 0.11.2",
- "rusqlite",
- "tracing",
-]
-
-[[package]]
 name = "ipfs_ds_rocksdb"
 version = "0.0.1"
 dependencies = [
  "anyhow",
+ "derive_more",
+ "fnv",
  "itertools 0.10.5",
  "libipld 0.14.0",
+ "parking_lot 0.11.2",
  "rocksdb",
+ "tracing",
 ]
 
 [[package]]
@@ -3296,17 +3258,6 @@ dependencies = [
  "libc",
  "libz-sys",
  "tikv-jemalloc-sys",
-]
-
-[[package]]
-name = "libsqlite3-sys"
-version = "0.23.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d2cafc7c74096c336d9d27145f7ebd4f4b6f95ba16aa5a282387267e6925cb58"
-dependencies = [
- "cc",
- "pkg-config",
- "vcpkg",
 ]
 
 [[package]]
@@ -4985,21 +4936,6 @@ dependencies = [
  "netlink-proto",
  "nix",
  "thiserror",
-]
-
-[[package]]
-name = "rusqlite"
-version = "0.26.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ba4d3462c8b2e4d7f4fcfcf2b296dc6b65404fbbc7b63daa37fd485c149daf7"
-dependencies = [
- "bitflags",
- "fallible-iterator",
- "fallible-streaming-iterator",
- "hashlink",
- "libsqlite3-sys",
- "memchr",
- "smallvec",
 ]
 
 [[package]]

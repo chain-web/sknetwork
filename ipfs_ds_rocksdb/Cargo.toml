@@ -12,6 +12,10 @@ rust-version = "1.57"
 libipld = "0.14"
 anyhow = "1.0"
 itertools = "0.10.5"
+fnv = "1.0.7"
+tracing = "0.1.29"
+parking_lot = "0.11.2"
+derive_more = "0.99"
 
 # OpenBSD and MSVC are unteested and shouldn't enable jemalloc:
 # https://github.com/tikv/jemallocator/blob/52de4257fab3e770f73d5174c12a095b49572fba/jemalloc-sys/build.rs#L26-L27
