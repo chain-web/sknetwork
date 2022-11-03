@@ -145,7 +145,7 @@ fn insert_get() {
     let c = block("c");
     let a = links("a", vec![&b, &c, &c]);
     let config = Config::default();
-    let mut store = BlockStore::open(path.clone(), config).unwrap();
+    let mut store = BlockStore::<DefaultParams>::open(path.clone(), config).unwrap();
     let _ = store.put_block(a.clone(), None);
     // // we should have all three cids
     assert_eq!(store.has_cid(a.cid()).unwrap(), true);
