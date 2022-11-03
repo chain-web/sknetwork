@@ -51,35 +51,29 @@
 //! - Pinning/aliasing a root does not require that the dag is complete
 //! - Aliases/named pins as opposed to unnamed and non-reference-counted pins
 //! - Temporary pins as a mechanism to keep blocks safe from gc while a tree is being constructed
-mod cidbytes;
-mod db;
 #[cfg(test)]
 mod tests;
 
-use cidbytes::CidBytes;
-use db::*;
 // use error::Context;
 // pub use error::{BlockStoreError, Result};
-use fnv::FnvHashSet;
-use libipld::{cid, codec::References, store::StoreParams, Block, Cid, Ipld};
+// use fnv::FnvHashSet;
+use libipld::{ Block, Cid, };
 use parking_lot::Mutex;
 use rocksdb::{
-    ColumnFamily, ColumnFamilyDescriptor, DBWithThreadMode, Options, SingleThreaded, DB,
+     ColumnFamilyDescriptor, DBWithThreadMode, Options, SingleThreaded, DB,
 };
 use std::{
     // borrow::Cow,
     // collections::HashSet,
     fmt,
     // iter::FromIterator,
-    marker::PhantomData,
     // mem,
     // ops::DerefMut,
     path::{Path, PathBuf},
     sync::{
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicBool},
         Arc,
     },
-    time::Duration,
 };
 // use tracing::*;
 const MAX_SIZE: usize = 39;
@@ -474,11 +468,11 @@ impl BlockStore {
         pin: Option<&mut TempPin>,
     ) -> Result<(), anyhow::Error> {
         let block_exists = self.has_block(block.cid()).unwrap();
-        println!(
-            "block:\n data{:?},\n hash {:?}",
-            block.data(),
-            block.hash().to_bytes()
-        );
+        // println!(
+        //     "block:\n data{:?},\n hash {:?}",
+        //     block.data(),
+        //     block.hash().to_bytes()
+        // );
         // println!("block exists: {}", block_exists);
         if !block_exists {
             // try get links
@@ -496,15 +490,13 @@ impl BlockStore {
                     // println!("add link:\n {:?},\n {:?}", buf.data, link.to_bytes());
                     self.db.put_cf(c, link.hash().to_bytes(), link.to_bytes())?;
                 }
-                // let c = self.db.cf_handle(CloumnNames::Refs.as_str()).unwrap();
-                // self.db.put_cf(c, block.hash().to_bytes(), links.)?;
             }
 
             // save block
             let c = self.db.cf_handle(CloumnNames::Block.as_str()).unwrap();
             let _res = self
                 .db
-                .put_cf(c, block.data(), block.data())?;
+                .put_cf(c, block.cid().hash().to_bytes(), block.data())?;
             // if res.as_ref().err().is_some() {
             //     return Err(anyhow::Error::msg(res.err().unwrap().to_string()));
             // }

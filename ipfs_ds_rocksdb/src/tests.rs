@@ -1,6 +1,6 @@
 #![allow(dead_code, unused_variables)]
 
-use crate::{Config, TempPin, BlockStore, cidbytes::CidBytes};
+use crate::{Config, TempPin, BlockStore};
 use fnv::FnvHashSet;
 use libipld::{
     cbor::DagCborCodec,

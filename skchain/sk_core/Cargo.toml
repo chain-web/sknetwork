@@ -14,4 +14,3 @@ num-traits = "0.2"
 num-bigint = "0.4"
 sk_common = { version = "0.0.1", path = "../sk_common" }
 sk_genesis = { version = "0.0.1", path = "../sk_genesis" }
-ipfs-embed = { version = "0.23", path = "../../ipfs-embed" }
