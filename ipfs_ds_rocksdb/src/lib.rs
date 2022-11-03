@@ -192,7 +192,7 @@ impl Config {
 enum CloumnNames {
     Cid,
     Block,
-    Refs,
+    // Pin,
 }
 
 impl CloumnNames {
@@ -200,7 +200,7 @@ impl CloumnNames {
         match self {
             CloumnNames::Cid => "Cid",
             CloumnNames::Block => "Block",
-            CloumnNames::Refs => "Refs",
+            // CloumnNames::Pin => "Pin",
         }
     }
 }
@@ -243,9 +243,9 @@ impl std::io::Write for CidBuf {
 pub struct BlockStore {
     db: DBWithThreadMode<SingleThreaded>,
     expired_temp_pins: Arc<Mutex<Vec<i64>>>,
-    config: Config,
-    db_path: PathBuf,
-    recompute_done: Arc<AtomicBool>,
+    // config: Config,
+    // db_path: PathBuf,
+    // recompute_done: Arc<AtomicBool>,
     // _s: PhantomData<S>,
 }
 
@@ -341,15 +341,15 @@ impl BlockStore {
 
         let mut db_opts = Options::default();
         db_opts.create_missing_column_families(true);
-        db_opts.create_if_missing(true);
-        let mut db = DB::open_cf_descriptors(&db_opts, db_path.clone(), vec![cid, block]).unwrap();
+        db_opts.create_if_missing(config.create);
+        let db = DB::open_cf_descriptors(&db_opts, db_path.clone(), vec![cid, block]).unwrap();
 
-        let mut this = Self {
+        let this = Self {
             db,
             expired_temp_pins: Arc::new(Mutex::new(Vec::new())),
-            config,
-            db_path,
-            recompute_done: Arc::new(AtomicBool::new(false)),
+            // config,
+            // db_path,
+            // recompute_done: Arc::new(AtomicBool::new(false)),
             // _s: PhantomData,
         };
         // std::thread::spawn(move || {
@@ -500,6 +500,10 @@ impl BlockStore {
             // if res.as_ref().err().is_some() {
             //     return Err(anyhow::Error::msg(res.err().unwrap().to_string()));
             // }
+        }
+
+        if pin.is_some() {
+            // TODO pin
         }
 
         Ok(())
