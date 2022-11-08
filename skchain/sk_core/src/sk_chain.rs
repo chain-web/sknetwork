@@ -1,11 +1,16 @@
 use super::genesis::GenesisConfig;
+use libipld::DefaultParams;
 use sk_common::events::SkEvents;
+use sk_fs::Skfs;
+use sk_net::NetworkService;
 
 pub struct SkChain {
     // pub(crate) realm: Realm,
     version: String,
     pub lifecycle_events: SkEvents,
-    pub(crate) genesis: GenesisConfig,
+    pub genesis: GenesisConfig,
+    pub network: NetworkService<DefaultParams>,
+    pub fs: Skfs<DefaultParams>,
 }
 
 impl SkChain {
@@ -20,13 +25,15 @@ impl SkChain {
     }
 
     pub fn init(&mut self) {
-      self.subscribe_event();
-      self.check_genesis_block();
+        self.subscribe_event();
+        self.check_genesis_block();
     }
 }
 
 pub struct SkChainBuilder {
     pub genesis: GenesisConfig,
+    pub network: NetworkService<DefaultParams>,
+    pub fs: Skfs<DefaultParams>,
 }
 
 impl SkChainBuilder {
@@ -35,6 +42,8 @@ impl SkChainBuilder {
             version: "0.0.1".to_string(),
             lifecycle_events: SkEvents::new(),
             genesis: self.genesis,
+            network: self.network,
+            fs: self.fs,
         };
         sk
     }

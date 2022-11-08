@@ -1,0 +1,53 @@
+[package]
+name = "sk_fs"
+version = "0.0.1"
+description = "ipfs impl"
+authors = ["cc"]
+license = ""
+repository = ""
+edition = "2021"
+rust-version = "1.57"
+
+[dependencies]
+anyhow = "1.0.56"
+libipld = "0.14"
+libp2p-bitswap = "0.24"
+libp2p-broadcast = "0.11"
+ipfs_ds_rocksdb = { version = "0.0.1", path = "../../ipfs_ds_rocksdb" }
+sk_net = { version = "0.0.1", path = "../sk_net" }
+# void = "1.0.2"
+# names = "0.13.0"
+# futures = "0.3.21"
+# chrono = "0.4.19"
+# fnv = "1.0.7"
+# prometheus = "0.13.0"
+# thiserror = "1.0.30"
+# async-executor = "1.4.1"
+# tracing = "0.1.32"
+# lazy_static = "1.4.0"
+parking_lot = "0.12.1"
+# futures-timer = "3.0.2"
+tokio = { version = "1", features = ["full"] }
+env_logger = "0.9"
+futures = "0.3"
+tempdir = "0.3.7"
+
+[dependencies.libp2p]
+version = "0.49.0"
+default-features = false
+features = [
+    "tokio",
+    "gossipsub",
+    "identify",
+    "kad",
+    "mdns",
+    "dns",
+    "websocket",
+    "ping",
+    "tcp",
+    #"relay",
+    "mplex",
+    "noise",
+    "pnet",
+    "yamux",
+]

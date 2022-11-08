@@ -12,5 +12,8 @@ rust-version = "1.57"
 num = "0.4"
 num-traits = "0.2"
 num-bigint = "0.4"
+libipld = "0.14"
 sk_common = { version = "0.0.1", path = "../sk_common" }
+sk_net = { version = "0.0.1", path = "../sk_net" }
+sk_fs = { version = "0.0.1", path = "../sk_fs" }
 sk_genesis = { version = "0.0.1", path = "../sk_genesis" }

@@ -5,11 +5,9 @@
 // use error::Context;
 // pub use error::{BlockStoreError, Result};
 // use fnv::FnvHashSet;
-use libipld::{ Block, Cid, };
+use libipld::{prelude::References, store::StoreParams, Block, Cid, Ipld};
 use parking_lot::Mutex;
-use rocksdb::{
-     ColumnFamilyDescriptor, DBWithThreadMode, Options, SingleThreaded, DB,
-};
+use rocksdb::{ColumnFamilyDescriptor, DBWithThreadMode, Options, SingleThreaded, DB};
 use std::{
     // borrow::Cow,
     // collections::HashSet,
@@ -18,10 +16,7 @@ use std::{
     // mem,
     // ops::DerefMut,
     path::{Path, PathBuf},
-    sync::{
-        atomic::{AtomicBool},
-        Arc,
-    },
+    sync::{atomic::AtomicBool, Arc},
 };
 // use tracing::*;
 const MAX_SIZE: usize = 39;
@@ -188,13 +183,13 @@ impl std::io::Write for CidBuf {
     }
 }
 
-pub struct BlockStore {
+pub struct BlockStore<S> {
     db: DBWithThreadMode<SingleThreaded>,
     expired_temp_pins: Arc<Mutex<Vec<i64>>>,
     // config: Config,
     // db_path: PathBuf,
     // recompute_done: Arc<AtomicBool>,
-    // _s: PhantomData<S>,
+    _s: std::marker::PhantomData<S>,
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -279,8 +274,11 @@ impl Drop for TempPin {
         }
     }
 }
-
-impl BlockStore {
+impl<S> BlockStore<S>
+where
+    S: StoreParams,
+    Ipld: References<S::Codecs>,
+{
     pub fn open_path(db_path: PathBuf, config: Config) -> Result<Self, anyhow::Error> {
         let mut colum_opts = Options::default();
         colum_opts.set_max_write_buffer_number(16);
@@ -298,7 +296,7 @@ impl BlockStore {
             // config,
             // db_path,
             // recompute_done: Arc::new(AtomicBool::new(false)),
-            // _s: PhantomData,
+            _s: std::marker::PhantomData,
         };
         // std::thread::spawn(move || {
         //     if let Err(e) = recompute_store_stats(&mut conn.conn) {
@@ -323,10 +321,8 @@ impl BlockStore {
     }
 
     /// Create a persistent block store with the given config
-    pub fn open(path: impl AsRef<Path>, config: Config) -> Result<Self, anyhow::Error> {
-        let mut pb: PathBuf = PathBuf::new();
-        pb.push(path);
-        Self::open_path(pb, config)
+    pub fn open(path: PathBuf, config: Config) -> Result<Self, anyhow::Error> {
+        Self::open_path(path, config)
     }
 
     /// Open the file at the given path for testing.
@@ -412,7 +408,7 @@ impl BlockStore {
 
     pub fn put_block(
         &mut self,
-        block: Block<libipld::DefaultParams>,
+        block: Block<S>,
         pin: Option<&mut TempPin>,
     ) -> Result<(), anyhow::Error> {
         let block_exists = self.has_block(block.cid()).unwrap();
@@ -486,6 +482,16 @@ impl BlockStore {
         let c = self.db.cf_handle(CloumnNames::Block.as_str()).unwrap();
         let block_res = self.db.get_cf(c, cid.hash().to_bytes()).unwrap();
         Ok(block_res)
+    }
+
+    /// get the set of descendants of an id for which we do not have the data yet.
+    /// The value itself is included.
+    /// It is safe to call this method for a cid we don't have yet.
+    pub fn get_missing_blocks(&mut self, cid: &Cid) -> anyhow::Result<Vec<Cid>> {
+        let res = Vec::new();
+        // let mut links = Vec::new();
+        // cid.references(&mut links).unwrap();
+        Ok(res)
     }
 
     // pub fn cleanup_temp_pins(&mut self) -> Result<()> {

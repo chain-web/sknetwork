@@ -41,6 +41,18 @@ function App() {
       </div>
 
       <p>{greetMsg}</p>
+
+      {greetMsg() && <div>
+        <div>
+        <input
+            id="greet-input"
+            placeholder="search a app"
+          />
+        </div>
+        <span>
+          app1
+        </span>
+        </div>}
     </div>
   );
 }

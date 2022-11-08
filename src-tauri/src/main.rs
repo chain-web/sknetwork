@@ -11,7 +11,7 @@ use tauri::{Manager, Size, PhysicalSize};
 #[tauri::command]
 fn start_sk(window: tauri::Window, env: &str) -> String {
     let _ = window.emit_all("sk_lifecycle_events", "start sk node");
-    let mut node = start_node();
+    let mut node = start_node().unwrap();
     let emit_bridge = move |key: LifeCycleEvents, msg: String| {
         let mut str_msg = key.to_string();
         str_msg.push_str(" ");

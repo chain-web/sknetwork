@@ -9,5 +9,32 @@ edition = "2021"
 rust-version = "1.57"
 
 [dependencies]
+tempdir = "0.3.7"
+anyhow = "1.0.56"
+libipld = "0.14"
+tokio = { version = "1", features = ["full"] }
 sk_core = { version = "0.0.1", path = "../sk_core" }
 sk_genesis = { version = "0.0.1", path = "../sk_genesis" }
+sk_net = { version = "0.0.1", path = "../sk_net" }
+sk_fs = { version = "0.0.1", path = "../sk_fs" }
+
+
+[dependencies.libp2p]
+version = "0.49.0"
+default-features = false
+features = [
+    "tokio",
+    "gossipsub",
+    "identify",
+    "kad",
+    "mdns",
+    "dns",
+    "websocket",
+    "ping",
+    "tcp",
+    #"relay",
+    "mplex",
+    "noise",
+    "pnet",
+    "yamux",
+]
