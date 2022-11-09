@@ -16,7 +16,7 @@ pub struct SkChain {
 impl SkChain {
     #[inline]
     pub fn subscribe_event(&mut self) {
-        self.lifecycle_events.registerAll(|key, msg| {
+        self.lifecycle_events.register_all(|key, msg| {
             let mut str_msg = key.to_string();
             str_msg.push_str(" ");
             str_msg.push_str(&msg);

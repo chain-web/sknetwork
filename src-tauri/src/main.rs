@@ -18,7 +18,7 @@ fn start_sk(window: tauri::Window, env: &str) -> String {
         str_msg.push_str(&msg);
         let _ = &window.emit_all("sk_lifecycle_events", str_msg);
     };
-    node.lifecycle_events.registerAll(emit_bridge);
+    node.lifecycle_events.register_all(emit_bridge);
     node.init();
     format!("start sk node use env:, {}!", env)
 }

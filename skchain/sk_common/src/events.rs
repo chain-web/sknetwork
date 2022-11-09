@@ -5,13 +5,14 @@ type Callback = Box<(dyn FnMut(LifeCycleEvents, String) + 'static)>;
 
 pub struct SkEvents {
     handlers: HashMap<LifeCycleEvents, Vec<Callback>>,
-    allHandlers: Vec<Callback>,
+    all_handlers: Vec<Callback>,
 }
 
 #[derive(Eq, Hash, PartialEq, Clone, Debug)]
 pub enum LifeCycleEvents {
     BeforeInit,
     InitGenesis,
+    Info,
 }
 
 impl Display for LifeCycleEvents {
@@ -24,7 +25,7 @@ impl SkEvents {
     pub fn new() -> Self {
         SkEvents {
             handlers: HashMap::new(),
-            allHandlers: Vec::new(),
+            all_handlers: Vec::new(),
         }
     }
 
@@ -49,7 +50,7 @@ impl SkEvents {
 
     // emit event
     pub fn emit(&mut self, key: LifeCycleEvents, arg: String) {
-        for cb in &mut self.allHandlers {
+        for cb in &mut self.all_handlers {
             cb(key.clone(), arg.clone())
         }
         if !self.handlers.contains_key(&key) {
@@ -62,12 +63,12 @@ impl SkEvents {
     }
 
     // run when emit all keys
-    pub fn registerAll<F>(&mut self, handler: F)
+    pub fn register_all<F>(&mut self, handler: F)
     where
         F: Fn(LifeCycleEvents, String) + 'static,
     {
         let cb = SkEvents::create_callback(handler);
-        self.allHandlers.push(cb);
+        self.all_handlers.push(cb);
     }
 }
 
@@ -94,7 +95,7 @@ mod tests {
             assert_eq!(key, LifeCycleEvents::BeforeInit);
             assert_eq!(msgs, "test11".to_string());
         }
-        evt.registerAll(test_all);
+        evt.register_all(test_all);
         evt.emit(LifeCycleEvents::BeforeInit, "test11".to_string());
     }
 }
