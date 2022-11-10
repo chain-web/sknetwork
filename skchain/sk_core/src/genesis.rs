@@ -4,6 +4,7 @@ use num_bigint::ToBigUint;
 use num_traits::Zero;
 use sk_common::events::LifeCycleEvents;
 use sk_common::timer::now;
+use sk_common::Account;
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -21,7 +22,7 @@ pub struct GenesisConfig {
     difficulty: BigUint,
     number: BigUint,
     cu_limit: BigUint,
-    timestamp: f64,
+    timestamp: u128,
     alloc: HashMap<String, AllocConfig>,
 }
 
@@ -52,6 +53,10 @@ impl SkChain {
     pub fn check_genesis_block(&mut self) {
         self.lifecycle_events
             .emit(LifeCycleEvents::InitGenesis, "env: local".to_string());
+        if self.block_service.is_empty() {
+            // cold start
+            let stateRoot = self.initAlloc();
+        }
         // if (!self.blockService.needGenseis()) {
         //   // 不是完全冷启动
         //   // this.checkGenesis();
@@ -97,34 +102,36 @@ impl SkChain {
         // }
     }
 
-    // // 设置预设账号
-    // initAlloc = async (alloc: GenesisConfig['alloc']) => {
-    //   const accounts: Account[] = [];
-    //   if (alloc) {
-    //     const dids = Object.keys(alloc);
-    //     for (const did of dids) {
-    //       const storageRoot = await this.chain.db.dag.put({});
-    //       const account = newAccount(did, storageRoot);
-    //       // 给每个初始账号充值
-    //       account.plusBlance(alloc[did].balance, "1641000000000");
-    //       accounts.push(account);
-    //     }
-    //   }
-    //   const initStateRoot = new Mpt(
-    //     this.chain.db,
-    //     (await this.chain.db.dag.put(createEmptyNode('state-root'))).toString(),
-    //   );
-    //   await initStateRoot.initRootTree();
-    //   for (const account of accounts) {
-    //     await initStateRoot.updateKey(
-    //       account.account.did,
-    //       await account.commit(this.chain.db),
-    //     );
-    //   }
-    //   return (await initStateRoot.save()).toString();
-    // };
+    // set init account to block0
+    fn initAlloc(&self) {
+        // generate init account
+        let mut accounts = Vec::new();
+        if !self.genesis.alloc.is_empty() {
+            for item in self.genesis.alloc.iter() {
+                let mut account = Account::new();
+                account.set_account(item.0.to_string());
+                // set balance to account
+                account.plus_blance(item.1.balance.clone(), 0);
+                accounts.push(account);
+            }
+        }
 
-    // // 检查链合法性
+        // generate init StateRoot
+        //   const initStateRoot = new Mpt(
+        //     this.chain.db,
+        //     (await this.chain.db.dag.put(createEmptyNode('state-root'))).toString(),
+        //   );
+        //   await initStateRoot.initRootTree();
+        //   for (const account of accounts) {
+        //     await initStateRoot.updateKey(
+        //       account.account.did,
+        //       await account.commit(this.chain.db),
+        //     );
+        //   }
+        //   return (await initStateRoot.save()).toString();
+    }
+
+    // 检查链合法性
     // checkGenesis(genesisBlock: Block) {
     //   // 暂时未确定，要搞什么
     // }
