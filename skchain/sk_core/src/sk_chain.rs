@@ -1,3 +1,5 @@
+use crate::block_service::BlockService;
+
 use super::genesis::GenesisConfig;
 use libipld::DefaultParams;
 use sk_common::events::SkEvents;
@@ -11,6 +13,7 @@ pub struct SkChain {
     pub genesis: GenesisConfig,
     pub network: NetworkService<DefaultParams>,
     pub fs: Skfs<DefaultParams>,
+    pub block_service: BlockService,
 }
 
 impl SkChain {
@@ -43,7 +46,8 @@ impl SkChainBuilder {
             lifecycle_events: SkEvents::new(),
             genesis: self.genesis,
             network: self.network,
-            fs: self.fs,
+            fs: self.fs.clone(),
+            block_service: BlockService::new(self.fs.clone()),
         };
         sk
     }

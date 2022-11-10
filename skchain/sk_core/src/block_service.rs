@@ -1,3 +1,4 @@
+use bincode::{deserialize, serialize};
 use std::collections::HashMap;
 
 use libipld::{
@@ -30,6 +31,21 @@ impl BlockNode {
             text: text.into(),
         }
     }
+
+    pub fn default() -> Self {
+        Self {
+            links: Vec::default(),
+            text: String::default(),
+        }
+    }
+
+    pub fn to_block(&self) -> Block {
+        let bytes = DagCborCodec.encode(self).unwrap();
+        let hash = Code::Sha2_256.digest(&bytes);
+        Block::new_unchecked(Cid::new_v1(0x71, hash), bytes)
+    }
+
+    // pub fn from_block() -> Self {}
 }
 
 fn gen_link(name: &str, children: Vec<&Block>) -> Block {
@@ -46,17 +62,22 @@ fn gen_block(name: &str) -> Block {
     Block::new_unchecked(Cid::new_v1(0x71, hash), bytes)
 }
 
+fn gen_block_by_bytes(bytes: &Vec<u8>) -> Block {
+    let hash = Code::Sha2_256.digest(&bytes);
+    Block::new_unchecked(Cid::new_v1(0x71, hash), bytes.clone())
+}
+
 struct BlockStore {
     root_cid: Cid,
-    root_block_10k: Vec<Cid>, // index every 10k block array's BlockNode cid
-    sub_blocks: HashMap<u32, Vec<Cid>>, // all blocks ,key is floor(block number)/10000
+    root_blocks: BlockNode, // index every 10k block array's BlockNode cid
+    sub_blocks: HashMap<u32, BlockNode>, // all blocks ,key is floor(block number)/10000
 }
 
 impl BlockStore {
     pub fn new() -> Self {
         BlockStore {
             root_cid: Cid::default(),
-            root_block_10k: Vec::new(),
+            root_blocks: BlockNode::default(),
             sub_blocks: HashMap::default(),
         }
     }
@@ -82,12 +103,17 @@ impl BlockService {
         }
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.store.root_cid.codec() == 0
+    }
+
     pub fn init(self, cid: Cid) {
-        self.store.set_root_cid(cid)
+        self.store.set_root_cid(cid);
     }
 
     pub fn save(self) {
-
-        // self.fs.storage.insert()
+        let block = self.store.root_blocks.to_block();
+        self.fs.storage.insert(block.clone()).unwrap();
+        self.store.set_root_cid(*block.cid());
     }
 }
