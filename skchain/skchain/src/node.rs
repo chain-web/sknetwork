@@ -32,5 +32,6 @@ pub async fn start_node() -> anyhow::Result<SkChain> {
         network
     }
     .build();
+    println!("start run node done");
     anyhow::Ok(node)
 }

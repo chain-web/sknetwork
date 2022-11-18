@@ -49,6 +49,7 @@ impl SkChainBuilder {
             fs: self.fs.clone(),
             block_service: BlockService::new(self.fs.clone()),
         };
+        println!("build sk done");
         sk
     }
 }
