@@ -4,6 +4,7 @@ members = [
   "skchain/sk_common",
   "skchain/sk_fs",
   "skchain/sk_net",
+  "skchain/sk_trie",
   "skchain/sk_genesis",
   "skchain/sk_contract",
   "ipfs_ds_rocksdb",
