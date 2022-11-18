@@ -4,8 +4,9 @@ use num_bigint::ToBigUint;
 use num_traits::Zero;
 use sk_common::events::LifeCycleEvents;
 use sk_common::timer::now;
-use sk_common::Account;
+use sk_common::{Account, Blake2Hasher};
 use std::collections::HashMap;
+use sk_trie::{TrieDBMutBuilder, MemoryDB, LayoutV0, TrieHash};
 
 #[derive(Debug)]
 pub struct Genesis {
@@ -117,6 +118,13 @@ impl SkChain {
         }
 
         // generate init StateRoot
+        type LayoutV0Bk2 = LayoutV0<Blake2Hasher>;
+		let mut db = MemoryDB::default();
+		let mut root = TrieHash::<LayoutV0Bk2>::default();
+        let initStateRoot = TrieDBMutBuilder::<LayoutV0Bk2>::new(&mut db, &mut root);
+        for account in accounts {
+            // 
+        }
         //   const initStateRoot = new Mpt(
         //     this.chain.db,
         //     (await this.chain.db.dag.put(createEmptyNode('state-root'))).toString(),

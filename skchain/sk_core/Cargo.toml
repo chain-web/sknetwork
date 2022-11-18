@@ -13,7 +13,11 @@ num = "0.4"
 num-traits = "0.2"
 num-bigint = "0.4"
 libipld = "0.14"
+bincode = "1.3.3"
 sk_common = { version = "0.0.1", path = "../sk_common" }
 sk_net = { version = "0.0.1", path = "../sk_net" }
 sk_fs = { version = "0.0.1", path = "../sk_fs" }
 sk_genesis = { version = "0.0.1", path = "../sk_genesis" }
+sk_trie = { version = "0.0.1", path = "../sk_trie" }
+trie-db = "0.24.0"
+trie-root = "0.17.0"
